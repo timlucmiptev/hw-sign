@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <button id="addrButton">Get Address</button>
+    </body>
+    <script type="module">
+     import * as bitcoin from 'bitcoinjs-lib';
+     import { Buffer } from 'buffer';
+     import AppBtc from "@ledgerhq/hw-app-btc";
+     import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+     //     import TransportU2F from "@ledgerhq/hw-transport-u2f";
+
+     console.log(Buffer);
+     const getBtcAddress = async () => {
+         const transport = await TransportWebUSB.create();
+         //const transport = await TransportU2F.create();
+         const btc = new AppBtc(transport);
+         const result = await btc.getWalletPublicKey("84'/0'/0'/0/0");
+         console.log(result);
+         console.log(Buffer.from(result.publicKey, 'hex'));
+         const pubk = Buffer.from(result.publicKey, 'hex');
+         const ecpk = bitcoin.ECPair.fromPublicKey(pubk);
+         console.log(ecpk);
+         const { address } = bitcoin.payments.p2wpkh({ pubkey: ecpk.publicKey() })
+         return result.bitcoinAddress;
+     };
+             const getAddr = () => {
+                 getBtcAddress()
+                     .then(a => console.log(a))
+                     .catch(err => console.log(err));
+             }
+             document.getElementById("addrButton").addEventListener ("click", getAddr, false);
+    </script>
+    
+</html>
+
