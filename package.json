@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@ledgerhq/hw-app-btc": "^5.29.0",
+    "@ledgerhq/hw-transport-webhid": "^5.29.0",
+    "@ledgerhq/hw-transport-webusb": "^5.29.0",
     "bitcoinjs-lib": "^5.2.0",
-    "buffer": "^6.0.2",
     "snowpack": "^2.17.1"
   },
   "devDependencies": {
-    "@ledgerhq/hw-app-btc": "^5.29.0",
-    "@ledgerhq/hw-transport-u2f": "^5.29.0",
-    "@ledgerhq/hw-transport-webhid": "^5.29.0",
-    "@ledgerhq/hw-transport-webusb": "^5.29.0"
+    "browserify": "^17.0.0",
+    "uglify-es": "^3.3.9"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

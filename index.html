@@ -2,34 +2,28 @@
     <body>
         <button id="addrButton">Get Address</button>
     </body>
+    <script src="bitcoinjs.js"></script>
     <script type="module">
-     import * as bitcoin from 'bitcoinjs-lib';
-     import { Buffer } from 'buffer';
+     import { toWords, encode } from 'bech32';
      import AppBtc from "@ledgerhq/hw-app-btc";
      import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
-     //     import TransportU2F from "@ledgerhq/hw-transport-u2f";
+     const bitcoin = bitcoinjs;
+     const Buffer = bitcoin.Buffer;
 
-     console.log(Buffer);
      const getBtcAddress = async () => {
          const transport = await TransportWebUSB.create();
-         //const transport = await TransportU2F.create();
          const btc = new AppBtc(transport);
-         const result = await btc.getWalletPublicKey("84'/0'/0'/0/0");
-         console.log(result);
-         console.log(Buffer.from(result.publicKey, 'hex'));
-         const pubk = Buffer.from(result.publicKey, 'hex');
-         const ecpk = bitcoin.ECPair.fromPublicKey(pubk);
-         console.log(ecpk);
-         const { address } = bitcoin.payments.p2wpkh({ pubkey: ecpk.publicKey() })
-         return result.bitcoinAddress;
+         const result = await btc.getWalletPublicKey("84'/0'/0'/0/2");
+         const { address } = bitcoin.payments.p2wpkh(
+             { pubkey: bitcoin.ECPair.fromPublicKey(Buffer.from(result.publicKey, 'hex')).publicKey });
+         return address;
      };
-             const getAddr = () => {
-                 getBtcAddress()
-                     .then(a => console.log(a))
-                     .catch(err => console.log(err));
-             }
-             document.getElementById("addrButton").addEventListener ("click", getAddr, false);
+     const getAddr = () => {
+         getBtcAddress()
+             .then(a => console.log(a))
+             .catch(err => console.log(err));
+     }
+     document.getElementById("addrButton").addEventListener ("click", getAddr, false);
     </script>
-    
 </html>
 
